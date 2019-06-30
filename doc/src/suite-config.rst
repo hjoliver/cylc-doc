@@ -3113,6 +3113,65 @@ simplifies for ``chunk=1`` to this:
    sometimes need to trigger off earlier cycling tasks.
 
 
+.. _alt-run-dirs:
+
+Alternate Run-Directories and Sub-Suites
+----------------------------------------
+
+The ``cylc register`` command normally creates a suite run directory under
+``~/cylc-run``, but with the ``--run-dir`` option it can create the run
+directory wherever you like, symlinked to the standard location so that normal
+suite monitoring and job log access (etc.) still works.
+
+The primary use-case for alternate run directories is sub-suites: you can put
+sub-suite run directories on fast local disk (for example), extract what you
+need from them in the corresponding main suite task, and then clean them up on
+the fly.
+
+Sub-suites should be started with ``cylc run --no-detach ...`` so that parent
+tasks in the main suite finish when the sub-suite finishes. If cycling, they
+should not cycle indefinitely or the main-suite task will never finish.
+They should usually be quick-running, because retriggering the parent task will
+re-run the whole sub-suite (however, sub-suites can be separately monitored and
+controlled as well - they are just normal suites).
+
+Example:
+
+.. code-block:: cylc
+
+
+        # MAIN SUITE
+        [scheduling]
+           cycling mode = integer 
+           initial cycle point = 1
+           [[dependencies]]
+              [[[P1]]]
+                  graph = "foo => bar"
+        [runtime]
+           [[foo]]
+              script = sleep 5
+           [[bar]]
+              script = """
+                  SUB_NAME=sub.${CYLC_TASK_CYCLE_POINT}
+                  cylc reg --run-dir=/tmp/$USER/$SUB_NAME $SUB_NAME /home/$USER/suites/sub
+                  cylc run --no-detach $SUB_NAME
+                  # capture result from sub-suite task stdout
+                  cylc cat-log -f o $SUB_NAME cat.1
+                  # clean-up
+                  rm -r /tmp/$USER/$SUB_NAME
+                  rm ~/cylc-run/$SUB_NAME
+                       """
+
+        # SUB SUITE
+        [scheduling]
+           [[dependencies]]
+               graph = "cat => dog"
+        [runtime]
+           [[root]]
+               script = """
+                   echo HELLO from $CYLC_TASK_NAME in $CYLC_SUITE_NAME
+                   sleep 5""" 
+
 .. _Jinja:
 
 Jinja2
