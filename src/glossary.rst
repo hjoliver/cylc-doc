@@ -6,14 +6,13 @@ Glossary
 
    workflow
    Cylc workflow
-      A Cylc workflow is a directory containing a :cylc:conf:`flow.cylc` file
-      which contains :term:`graphing<graph>` representing a workflow.
+      A Cylc workflow is defined by a :cylc:conf:`flow.cylc` configuration file
+      that contains a task dependency :term:`graph<graph>` and task definitions.
 
    graph
-      The graph of a :term:`workflow<Cylc workflow>` refers to the
-      :term:`graph strings<graph string>` contained within the
-      :cylc:conf:`[scheduling][graph]` section. For example the following is,
-      collectively, a graph:
+      The dependency graph of a Cylc :term:`workflow<Cylc workflow>` is defined
+      by :term:`graph strings<graph string>` in the
+      :cylc:conf:`[scheduling][graph]` section. For example:
 
       .. code-block:: cylc
 
@@ -51,8 +50,8 @@ Glossary
          "foo.02T00" -> "bar.02T00"
 
    graph string
-      A graph string is a collection of dependencies which are placed inside the
-      :cylc:conf:`[scheduling][graph]` section e.g:
+      A graph string is a collection of dependencies defined in 
+      the :cylc:conf:`[scheduling][graph]` section e.g:
 
       .. code-block:: cylc-graph
 
@@ -60,13 +59,13 @@ Glossary
          pub => bool
 
    dependency
-      A dependency is a relationship between two :term:`tasks<task>` which
-      describes a constraint on one.
+      A dependency is a relationship between two :term:`tasks<task>` where
+      one depends on the other.
 
       For example the dependency
       ``foo => bar`` means that the :term:`task` ``bar`` is *dependent* on the
-      task ``foo``. This means that the task ``bar`` will only run once the
-      task ``foo`` has successfully completed.
+      task ``foo``. In this case ``bar`` will only run once ``foo`` has
+      successfully completed.
 
       See also:
 
@@ -75,8 +74,8 @@ Glossary
 
    conditional dependency
    conditional trigger
-      A conditional dependency is a :term:`dependency` which uses the ``&`` (and)
-      or ``|`` (or) operators for example:
+      A conditional dependency is a :term:`dependency` involving the ``&``
+      (and) or ``|`` (or) operators for example:
 
       .. code-block:: cylc-graph
 
@@ -98,9 +97,6 @@ Glossary
       * "``foo`` triggers ``bar``"
       * "``bar`` triggers off of ``foo``"
 
-      In practice a trigger is the left-hand side of a dependency (``foo`` in
-      this example).
-
       See also:
 
       * :term:`dependency`
@@ -108,13 +104,13 @@ Glossary
       * :term:`family trigger`
 
    cycle
-      In a :term:`cycling workflow<cycling>` one cycle is one repetition of the
-      workflow.
+      In a :term:`cycling workflow<cycling>` a cycle is one repetition of the
+      workflow (note however that Cylc is not constrained to running whole
+      cycles in sequence).
 
-      For example, in the following workflow each dotted box represents a cycle
-      and the :term:`tasks<task>` within it are the :term:`tasks<task>`
-      belonging to that cycle. The numbers (i.e. ``1``, ``2``, ``3``) are the
-      :term:`cycle points<cycle point>`.
+      For example, in the following workflow the dotted boxes represent cycles
+      and the :term:`tasks<task>` within it belong to that cycle. The numbers
+      (i.e. ``1``, ``2``, ``3``) are the :term:`cycle points<cycle point>`.
 
       .. digraph:: example
          :align: center
@@ -151,7 +147,7 @@ Glossary
          "bar.1" -> "bar.2" -> "bar.3"
 
    cycling
-      A cycling :term:`workflow<Cylc workflow>` is one in which the workflow repeats.
+      A cycling :term:`workflow<Cylc workflow>` is composed of repeating tasks.
 
       See also:
 
@@ -160,9 +156,8 @@ Glossary
 
    cycle point
       A cycle point is the unique label given to a particular :term:`cycle`.
-      If the :term:`workflow<Cylc workflow>` is using :term:`integer cycling` then
-      the cycle points will be numbers e.g. ``1``, ``2``, ``3``, etc. If the
-      :term:`workflow<Cylc workflow>` is using :term:`datetime cycling` then the
+      If using :term:`integer cycling` the cycle points will be integers, e.g.
+      ``1``, ``2``, ``3``, etc. If using :term:`datetime cycling` then the
       labels will be :term:`ISO8601` datetimes e.g. ``2000-01-01T00:00Z``.
 
       See also:
@@ -171,12 +166,13 @@ Glossary
       * :term:`final cycle point`
 
    initial cycle point
-      In a :term:`cycling workflow <cycling>` the initial cycle point is the point
-      from which cycling begins.
+      In a :term:`cycling workflow <cycling>` the initial cycle point is the
+      point at which cycling begins, and it is the start of the workflow
+      :term:`graph<graph>.
 
       It is set by :cylc:conf:`[scheduling]initial cycle point`.
 
-      If the initial cycle point were 2000 then the first cycle would
+      If the initial datetime cycle point were 2000 then the first cycle would
       be on the 1st of January 2000.
 
       See also:
@@ -185,8 +181,9 @@ Glossary
       * :term:`final cycle point`
 
    final cycle point
-      In a :term:`cycling workflow <cycling>` the final cycle point is the point
-      at which cycling ends.
+      In a :term:`cycling workflow <cycling>` the final cycle point is the
+      point at which cycling ends, and it is the end of hte workflow
+      :term:`graph<graph>.
 
       It is set by :cylc:conf:`[scheduling]final cycle point`.
 
@@ -199,10 +196,10 @@ Glossary
       * :term:`initial cycle point`
 
    start cycle point
-      The start cycle point is the :term:`cycle point` where the
-      :term:`scheduler` :term:`starts <start>` running from.
+      The start cycle point is the :term:`cycle point` in the workflow graph
+      where the :term:`scheduler` :term:`starts <start>` running from.
 
-      This may be before or after the :term:`initial cycle point`.
+      This may be at or after the :term:`initial cycle point`.
 
       See :ref:`start_stop_cycle_point` for more information.
 
@@ -217,7 +214,7 @@ Glossary
       The stop cycle point is the :term:`cycle point` at which the
       :term:`scheduler` :term:`shuts down <shutdown>`.
 
-      This may be before or after the :term:`final cycle point`.
+      This may be before or at the :term:`final cycle point`.
 
       See :ref:`start_stop_cycle_point` for more information.
 
@@ -229,22 +226,22 @@ Glossary
       * :term:`final cycle point`
 
    integer cycling
-      An integer cycling workflow is a :term:`cycling workflow<cycling>` which has
-      been configured to use integer cycling. When a workflow uses integer cycling
-      integer :term:`recurrences <recurrence>` may be used in the :term:`graph`,
-      e.g. ``P3`` means every third cycle. This is configured by setting
-      :cylc:conf:`[scheduling]cycling mode = integer`.
+      If a Cylc workflow has been configured to use integer cycling
+      (:cylc:conf:`[scheduling]cycling mode = integer`) the task
+      cycle points will be integers, and integer :term:`recurrences
+      <recurrence>` are used in the :term:`graph`. E.g. ``P3`` means
+      every third cycle. 
 
       See also:
 
       * :ref:`Cylc tutorial <tutorial-integer-cycling>`
 
    datetime cycling
-      A datetime cycling is the default for a :term:`cycling workflow<cycling>`.
-      When using datetime cycling :term:`cycle points<cycle point>` will be
+      Datetime cycling is the default for a :term:`cycling workflow<cycling>`.
+      :term:`Cycle points<cycle point>` are
       :term:`ISO8601 datetimes <ISO8601 datetime>` e.g. ``2000-01-01T00:00Z``
-      and ISO8601 :term:`recurrences<recurrence>` can be used e.g. ``P3D``
-      means every third day.
+      and ISO8601 :term:`recurrences<recurrence>` are used in the
+      :term:`graph`. E.g. ``P3D`` means every third day.
 
       See also:
 
@@ -260,8 +257,8 @@ Glossary
       * :ref:`Clock Trigger Tutorial <tutorial-cylc-clock-trigger>`
 
    ISO8601
-      ISO8601 is an international standard for writing dates and times which is
-      used in Cylc with :term:`datetime cycling`.
+      ISO8601 is an international standard for writing dates and times, used in
+      Cylc for :term:`datetime cycling` and defining task retry intervals etc.
 
       See also:
 
@@ -274,8 +271,7 @@ Glossary
         <http://www.cl.cam.ac.uk/%7Emgk25/iso-time.html>`_
 
    ISO8601 datetime
-      A date-time written in the ISO8601
-      format, e.g:
+      A datetime written in the ISO8601 format, e.g:
 
       * ``2000-01-01T00:00Z``: midnight on the 1st of January 2000
 
@@ -295,11 +291,9 @@ Glossary
       * :term:`ISO8601`
 
    recurrence
-      A recurrence is a repeating sequence which may be used to define a
-      :term:`cycling workflow<cycling>`. Recurrences determine how often something
-      repeats and take one of two forms depending on whether the
-      :term:`workflow<Cylc workflow>` is configured to use :term:`integer cycling`
-      or :term:`datetime cycling`.
+      A recurrence is a repeating sequence used to define a
+      :term:`cycling workflow<cycling>`. Recurrences are used for both
+      :term:`integer cycling` and :term:`datetime cycling`.
 
       See also:
 
@@ -309,10 +303,10 @@ Glossary
    inter-cycle dependency
    inter-cycle trigger
       In a :term:`cycling workflow <cycling>` an inter-cycle dependency
-      is a :term:`dependency` between two tasks in different cycles.
+      is a :term:`dependency` between tasks in different cycles.
 
       For example in the following workflow the task ``bar`` is dependent on
-      its previous occurrence:
+      its own previous instance:
 
       .. code-block:: cylc
 
@@ -360,8 +354,9 @@ Glossary
          "bar.1" -> "bar.2" -> "bar.3"
 
    qualifier
-      A qualifier is used to determine the :term:`task state` to which a
-      :term:`dependency` relates.
+      A qualifier determines the :term:`task state` or
+      :term:`task message <message trigger>`
+      to which a :term:`dependency` relates.
 
       See also:
 
@@ -369,11 +364,12 @@ Glossary
       * :term:`task state`
 
    task
-      A task represents an activity in a workflow. It is a specification of
-      that activity consisting of the script or executable to run and certain
-      details of the environment it is run in.
+      A task is a unit of activity in a workflow. The `flow.cylc` configuration
+      file specifies how tasks relate to one another (in the dependency
+      :term:`graph`), the script or executable to run the activity, and where
+      and how to run it.
 
-      The task specification is used to create a :term:`job` which is executed
+      The task specification is used to create a :term:`job` to be executed
       on behalf of the task.
 
       Tasks submit :term:`jobs <job>` and therefore each :term:`job` belongs
@@ -412,26 +408,26 @@ Glossary
          [runtime]
              [[foo]]
 
-      Implicit tasks are not allowed by default, as they are often typos.
-      However, it is possible to allow them using
+      Implicit tasks are not allowed by default, as they often result from
+      typographical errors. However, you can allow them with
       :cylc:conf:`flow.cylc[scheduler]allow implicit tasks` during
-      development of a workflow.
+      workflow development.
 
       See also:
 
       * :ref:`ImplicitTasks`
 
    run directory
-      The run directory contains all of the configuration for a workflow, e.g.
-      the :cylc:conf:`flow.cylc` file.
+      The run directory contains all of the configuration and files for a
+      workflow, e.g. the :cylc:conf:`flow.cylc` file.
 
-      It contains all the necessary files to run the workflow and typically
-      resides in the :term:`cylc-run directory`:
+      It contains all the files needed to run the workflow and is typically
+      located under the :term:`cylc-run directory`:
 
       ``~/cylc-run/<workflow-name>``
 
-      The run directory can be accessed by a running workflow using
-      the environment variable ``CYLC_WORKFLOW_RUN_DIR``.
+      The run directory can be accessed by task jobs in a running workflow
+      using the environment variable ``CYLC_WORKFLOW_RUN_DIR``.
 
       See also:
 
@@ -442,10 +438,8 @@ Glossary
       * :term:`cylc-run directory`
 
    work directory
-      When Cylc executes a :term:`job` it does so inside the
-      :term:`job's <job>` working directory. This directory is created by Cylc
-      and lies within the directory tree inside the relevant workflow's
-      :term:`run directory`.
+      Cylc executes task :term:`jobs <job>` in job-specific work directories.
+      These are created by Cylc under the workflow :term:`run directory`.
 
       .. code-block:: sub
 
