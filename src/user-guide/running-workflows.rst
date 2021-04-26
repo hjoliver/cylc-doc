@@ -381,7 +381,7 @@ if you like).
 Client-Server Interaction
 -------------------------
 
-Scedulers listen on dedicated network ports for
+Schedulers listen on dedicated network ports for
 TCP communications from Cylc clients (task jobs and user-invoked commands)
 
 Use ``cylc scan`` to see which workflows are listening on which ports on
