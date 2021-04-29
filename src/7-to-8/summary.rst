@@ -296,29 +296,6 @@ The following dependencies are not installed by Conda or pip:
 - GNU `coreutils`
 - `mail` (for automated email functionality)
 
-What's Still Missing From Cylc 8?
----------------------------------
-
-Some features are still in progress or yet to be started:
-
-- Other UI workflow views:
-   - graph view
-   - table view
-   - dot view
-- Static workflow graph visualization
-- Cross-user functionality and fine-grained authorization
-- UI presentation of workflow and job logs
-   - for the moment look in your ``cylc-run`` directory, or use
-     ``cylc cat-log``, or use Cylc Review from cylc-7.9.3/7.8.8 
-     to view Cylc 8 logs
-- UI/CLI "edit run"
-- UI Server:
-   - sub-service to install new workflows
-   - sub-service to start stopped workflows
-   - populate historic task data from run DBs
-
-- Delta-driven TUI, for large workflows
-
 .. _Cylc 7 Scheduler Deficiencies Fixed by Cylc 8:
 
 Cylc 7 Scheduler Deficiencies Fixed by Cylc 8
