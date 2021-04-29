@@ -124,6 +124,13 @@ you can see or infer what is being waited on: e.g. a queue, xtrigger, or
 retry timer. For instance, a waiting task that already has one or more
 associated jobs must be about to retry.
 
+Task Job Execution
+------------------
+
+User-defined job scripting is now executed in a subshell to protect job
+status messaging (which uses the Cylc Python library) from environment
+changes.
+
 Window on the Workflow
 ----------------------
 
