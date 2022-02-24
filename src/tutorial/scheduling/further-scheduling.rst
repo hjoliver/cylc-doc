@@ -6,7 +6,7 @@ Further Scheduling
 .. admonition:: Aims
    :class: aims
 
-   | You should be aware of advanced scheduling features:
+   | You should be aware of some more advanced scheduling features:
    | ✅ Task state qualifiers.
    | ✅ Clock triggers.
    | ✅ Alternative calendars.
@@ -45,7 +45,7 @@ Qualifiers
 
 .. nextslide::
 
-It is also possible to create your own custom :term:`qualifiers <qualifier>`
+It is also possible to create your own :term:`qualifiers <qualifier>`
 to handle events within your code (custom outputs).
 
 .. ifnotslides::
@@ -89,7 +89,7 @@ Alternative Calendars
 .. ifnotslides::
 
    By default Cylc uses the Gregorian calendar for :term:`datetime cycling`,
-   but Cylc also supports:
+   but it also supports:
 
    - Integer cycling.
    - 360-day calendar (12 months of 30 days each in a year).

@@ -5,14 +5,14 @@ Introduction
 
 .. ifnotslides::
 
-   So far we have been working with the ``[scheduling]`` section. This is where
-   the workflow is defined in terms of :term:`tasks <task>` and
-   :term:`dependencies <dependency>`.
+   So far we have been working with the ``[scheduling]`` section, where
+   the workflow :term:`tasks <task>` and :term:`dependencies <dependency>` are
+   defined.
 
-   In order to make the workflow runnable we must associate tasks with scripts
-   or binaries to be executed when the task runs. This means working with the
-   ``[runtime]`` section which determines what runs, as well as where and how
-   it runs.
+   To make the workflow runnable we must associate tasks with scripts
+   or applications to be executed when the task runs. This means working with
+   the ``[runtime]`` section, which determines what runs, where it runs, and
+   how it runs.
 
 .. ifslides::
 
@@ -50,8 +50,8 @@ The ``script`` Setting
 
 .. ifnotslides::
 
-   We tell Cylc *what* to execute when a task is run using the ``script``
-   setting.
+   The ``script`` setting tells Cylc *what* to execute when a task is ready to
+   run.
 
    This setting is interpreted as a bash script. The following example defines a
    task called ``hello_world`` which writes ``Hello World!`` to stdout upon
@@ -65,7 +65,10 @@ The ``script`` Setting
 
 .. note::
 
-   If you do not set the ``script`` for a task then nothing will be run.
+   If you do not set ``script`` for a task then it will not run anything useful
+   (it will run a job that justs communicates its status to the scheduler and
+   exits immediately).
+
 
 We can also call other scripts or executables in this way, e.g:
 
@@ -82,11 +85,12 @@ We can also call other scripts or executables in this way, e.g:
 .. ifnotslides::
 
    It is often a good idea to keep our scripts with the Cylc workflow rather than
-   leaving them somewhere else on the system.
+   leaving them somewhere else on the system. This helps isolates your workflow from
+   unexpected changes to external scripts.
 
    If you create a ``bin/`` sub-directory within the :term:`source directory`,
-   Cylc will automatically prepend it to the ``PATH`` environment
-   variable when the task runs.
+   Cylc will automatically prepend its installed location to the ``PATH``
+   environment variable when the task runs.
 
 .. code-block:: bash
    :caption: bin/hello_world
@@ -139,23 +143,23 @@ Tasks And Jobs
 
    Waiting
       :term:`Tasks <task>` wait for their dependencies to be satisfied before
-      running. In the meantime they are in the "Waiting" state.
-   Submitted
+      running. During this time, they are in the *waiting* state.
+   Preparing
       When a :term:`task's <task>` dependencies have been met it is ready for
-      submission. During this phase the :term:`job script` is created.
-      The :term:`job` is then submitted to the specified :term:`job runner`.
-      There is more about this in the :ref:`next section
-      <tutorial-job-runner>`.
+      job submission. During the *preparing*  phase the :term:`job script` is
+      prepared and submitted to the specified :term.:`job runner`.
+   Submitted
+      Once submitted to the :term:`job runner`, the task remains in the
+      *submitted* state until it starts executing.
+      There is more about this in the :ref:`next section <tutorial-job-runner>`.
    Running
-      A :term:`task` is in the "Running" state as soon as the :term:`job` is
-      executed.
+      A :term:`task` is in the *running* state while its job is executing.
    Succeeded
       If the :term:`job` submitted by a :term:`task` has successfully
-      completed (i.e. there is zero return code) then it is said to have
-      succeeded.
+      completed (i.e. there is a zero return code) then it enters the
+      *succeeded* state.
 
-   These descriptions, and a few more (e.g. failed), are called the
-   :term:`task states <task state>`.
+   There are several other task states as well, such as *failed*.
 
 .. ifslides::
 

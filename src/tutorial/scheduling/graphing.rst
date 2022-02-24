@@ -1,7 +1,7 @@
 .. _tutorial-cylc-graphing:
 
-Graphing
-========
+The Dependency Graph
+====================
 
 .. admonition:: Aims
    :class: aims
@@ -18,7 +18,7 @@ The :cylc:conf:`flow.cylc` File Format
 .. ifnotslides::
 
    A :term:`Cylc workflow` is defined by a :cylc:conf:`flow.cylc` configuration
-   file, which uses a nested `INI`_-based format:
+   file, which uses a nested `INI`_ format:
 
 .. ifslides::
 
@@ -185,9 +185,9 @@ In Cylc we consider workflows in terms of :term:`tasks <task>` and
 
 .. ifnotslides::
 
-   Task are represented as words and dependencies as arrows (``=>``), so the
-   following text defines two tasks where ``make_dough`` is dependent on
-   ``buy_ingredients``:
+   Task are represented by their names and dependencies by arrows between them
+   (``=>``), so the following text defines two tasks where ``make_dough`` is
+   dependent on ``buy_ingredients``:
 
 .. minicylc::
    :align: center
@@ -249,8 +249,8 @@ Collectively these :term:`graph strings<graph string>` are referred to as a
 
    .. ifnotslides::
 
-      The order in which lines appear in the graph section doesn't matter, for
-      instance the following examples are the same as each other:
+      The order of lines in the graph doesn't matter, so
+      the following examples are equivalent:
 
    .. code-block:: cylc-graph
 
@@ -268,8 +268,8 @@ Cylc Graphs
 
 .. ifnotslides::
 
-   In a :term:`Cylc workflow` the :term:`graph` is stored under the
-   ``[scheduling][graph]R1`` setting, i.e:
+   The :term:`graph` for a *non-cycling* :term:`Cylc workflow` is defined by
+   ``[scheduling][graph]R1``, where ``R1`` means *run once*:
 
 .. code-block:: cylc
 
@@ -284,19 +284,19 @@ Cylc Graphs
 
 .. ifnotslides::
 
-   This is a minimal :term:`Cylc workflow`, in which we have defined a
-   :term:`graph` representing a workflow for Cylc to run.
-   We have not yet provided Cylc with the scripts or binaries to run for
-   each task. This will be covered later in the
-   :ref:`runtime tutorial <tutorial-runtime>`.
+   This is a minimal :term:`Cylc workflow` that defines a :term:`graph` of
+   tasks for Cylc to run, but does not yet say what scripts or binaries to run
+   for each task. We will cover that later in the :ref:`runtime tutorial
+   <tutorial-runtime>`.
 
-   Cylc provides a GUI for visualising :term:`graphs <graph>`. It is run on the
-   command line using the ``cylc graph <path>`` command where the path ``path``
-   is to the :cylc:conf:`flow.cylc` file you wish to visualise.
+   Cylc provides a command line utility
+   for visualising :term:`graphs <graph>`, ``cylc graph <path>``, where
+   ``path`` is the location of the :cylc:conf:`flow.cylc` file that you wish to
+   visualise.
 
-   When run, ``cylc graph`` will display a diagram similar to the ones you have
-   seen so far. The number ``1`` which appears below each task is the
-   :term:`cycle point`. We will explain what this means in the next section.
+   ``cylc graph`` will generate a diagram similar to the ones you have
+   seen so far. The number ``1`` below each task is the :term:`cycle point`. We
+   will explain what this means in the next section.
 
 .. image:: ../img/cylc-graph.png
    :align: center
@@ -327,7 +327,7 @@ Cylc Graphs
 .. ifslides::
 
    .. rubric:: In this practical we will create a new Cylc workflow and write a
-      graph for it to use.
+      graph of tasks for it to run.
 
    Next session: :ref:`tutorial-integer-cycling`
 
@@ -341,22 +341,22 @@ Cylc Graphs
       A :term:`Cylc workflow` is defined by a :cylc:conf:`flow.cylc` file.
 
       If you don't have one already, create a ``cylc-src`` directory in your
-      user space i.e.
+      user space:
 
       .. code-block::
 
          mkdir ~/cylc-src
 
-      Within this directory create a new folder called ``graph-introduction``,
-      which is to be our :term:`run directory`. Move into it:
+      Now create a new workflow :term:`source directory` called
+      ``graph-introduction`` under ``cylc-src`` and move into it:
 
       .. code-block:: bash
 
          mkdir ~/cylc-src/graph-introduction
          cd ~/cylc-src/graph-introduction
 
-      Inside this directory create a :cylc:conf:`flow.cylc` file and paste in the
-      following text:
+      Inside your workflow source directory create a :cylc:conf:`flow.cylc`
+      file and paste the following text into it:
 
       .. code-block:: cylc
 
@@ -370,7 +370,7 @@ Cylc Graphs
 
    #. **Write a graph.**
 
-      We now have a blank Cylc workflow, next we need to define a graph.
+      We now have a blank Cylc workflow. Next we need to define a graph.
 
       Edit your :cylc:conf:`flow.cylc` file to add graph strings representing the
       following graph:

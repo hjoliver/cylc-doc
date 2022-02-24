@@ -9,25 +9,26 @@ Datetime Cycling
    :class: aims
 
    | You should be able to:
-   | ✅ Write workflows where cycle points are dates and/or times.
+   | ✅ Write workflows  with datetime cycle points.
 
 
-In the last section we looked at writing an :term:`integer cycling` workflow
-where the :term:`cycle points <cycle point>` are numbered.
+In the last section we created an :term:`integer cycling` workflow
+with numbered :term:`cycle points <cycle point>`.
 
 .. ifnotslides::
 
-   Typically workflows are repeated at a regular time interval, say every day
-   or every few hours. To make this easier Cylc has a datetime cycling mode
-   where the :term:`cycle points <cycle point>` use date and time specifications
-   rather than numbers.
+   Workflows may need to be repeated at a regular time intervals, say every day
+   or every few hours. To support this Cylc can generate datetime sequences
+   as :term:`cycle points <cycle point>` instead of integers.
 
 .. admonition:: Reminder
    :class: tip
 
-   :term:`Cycle points <cycle point>` are labels. Cylc runs tasks as soon as
-   their dependencies are met so cycles do not necessarily run in order, or
-   at the real world time indicated by the cycle point.
+   In Cylc, :term:`cycle points <cycle point>` are task labels that anchor the
+   depedencies between individual tasks: e.g. this task depends on that task in
+   that cycle. Cylc runs tasks as soon as their dependencies are met so cycles
+   do not necessarily run in order, or at the real world time corresponding to
+   the cycle point value.
 
 
 .. _tutorial-iso8601:
@@ -35,8 +36,8 @@ where the :term:`cycle points <cycle point>` are numbered.
 ISO8601
 -------
 
-In Cylc, dates, times and durations are written using the :term:`ISO8601` format
-- an international standard for representing dates and times.
+Cylc uses the :term:`ISO8601` international datetime standard format to
+represent datetimes and durations.
 
 .. _tutorial-iso8601-datetimes:
 
@@ -45,13 +46,17 @@ ISO8601 Datetimes
 
 .. ifnotslides::
 
-   In ISO8601, datetimes are written from the largest unit to the smallest
+   ISO8601 datetimes are written from the largest unit to the smallest
    (i.e: year, month, day, hour, minute, second in succession) with the ``T``
    character separating the date and time components. For example, midnight
    on the 1st of January 2000 is written ``20000101T000000``.
 
-   For brevity we may omit seconds (and minutes) from the time i.e:
+   For brevity we can omit seconds (or minutes) from the time i.e:
    ``20000101T0000`` (``20000101T00``).
+
+   .. note::
+
+      The smallest period for datetime cycling sequences in Cylc is 1 minute.
 
    For readability we can add hyphens (``-``) between the date components
    and colons (``:``) between the time components.
@@ -73,8 +78,8 @@ ISO8601 Durations
 
 .. ifnotslides::
 
-   In ISO8601, durations are prefixed with a ``P`` (for "period") and are
-   written with a character following each unit:
+   ISO8601 durations are prefixed with a ``P`` (for "period") and
+   special characters following each unit:
 
 * ``Y`` for year.
 * ``M`` for month.
@@ -88,9 +93,8 @@ ISO8601 Durations
 
 .. ifnotslides::
 
-   As with datetimes the components are written in order from largest to
-   smallest and the date and time components are separated by the ``T``
-   character. E.G:
+   As for datetimes, duration components are written in order from largest to
+   smallest, and the date and time components are separated by a ``T``:
 
 * ``P1D``: one day.
 * ``PT1H``: one hour.
@@ -103,11 +107,11 @@ ISO8601 Durations
 Datetime Recurrences
 --------------------
 
-In :term:`integer cycling`, workflows' recurrences are written ``P1``, ``P2``,
+In :term:`integer cycling`, workflows, recurrences are written ``P1``, ``P2``,
 etc.
 
-In :term:`datetime cycling <datetime cycling>` there are two ways to write
-recurrences:
+In :term:`datetime cycling <datetime cycling>` workflows, there are two ways to
+write recurrences:
 
 1. Using ISO8601 durations (e.g. ``P1D``, ``PT1H``).
 2. Using ISO8601 datetimes with inferred recurrence.
@@ -119,7 +123,7 @@ Inferred Recurrence
 
 .. ifnotslides::
 
-   A recurrence can be inferred from a datetime by omitting digits from the
+   Recurrence can be inferred from a datetime by omitting digits from the
    front. For example, if the year is omitted then the recurrence can be
    inferred to be annual. E.g.:
 
@@ -136,6 +140,7 @@ Inferred Recurrence
 
    To omit hours from a date time we must place a ``-`` after the
    ``T`` character.
+
 
 Recurrence Formats
 ^^^^^^^^^^^^^^^^^^
@@ -215,12 +220,12 @@ might produce different results for the recurrences.
 
 .. nextslide::
 
-We could write the recurrence "every midnight" independent from the initial
+We could write the recurrence "every midnight" independent of the initial
 cycle point by:
 
-* Use an `inferred recurrence`_ instead (i.e. ``T00``).
+* Using an `inferred recurrence`_ instead (i.e. ``T00``).
 * Overriding the recurrence start point (i.e. ``T00/P1D``)
-* Using the ``[scheduling]initial cycle point constraints`` setting to
+* Using ``[scheduling]initial cycle point constraints`` to
   constrain the initial cycle point (e.g. to a particular time of day). See
   the `Cylc User Guide`_ for details.
 
@@ -294,15 +299,14 @@ Putting It All Together
 .. ifnotslides::
 
    Cylc was originally developed for running operational weather forecasting. In
-   this section we will outline a basic (dummy) weather-forecasting workflow and
-   explain how to implement it in cylc.
+   this section we will outline how to implement a basic (dummy) weather-forecasting workflow.
 
    .. note::
 
       Technically the workflow outlined in this section is a `nowcasting`_ workflow.
       We will refer to it as forecasting for simplicity.
 
-   A basic weather-forecasting workflow consists of three main steps:
+   A basic weather forecasting workflow consists of three main steps:
 
 1. Gathering Observations
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -362,10 +366,10 @@ Putting It All Together
 
    We will do this with a task called ``forecast`` which will run
    **every six hours starting six hours after the initial cycle point**.
-   The ``forecast`` task will be dependent on:
+   The ``forecast`` task will depend on:
 
-   * The ``consolidate_observations`` task from the previous two cycles as well
-     as from the present cycle.
+   * The ``consolidate_observations`` task from the previous two cycles and
+     the present cycle.
    * The ``get_rainfall`` task from the present cycle.
 
 .. digraph:: example
@@ -439,8 +443,8 @@ Putting It All Together
 
    #. **Create A New Workflow.**
 
-      Within your ``~/cylc-src`` directory create a new directory called
-      ``datetime-cycling`` and move into it:
+      Create a new source directory ``datetime-cycling`` under ``~/cylc-src``,
+      and move into it:
 
       .. code-block:: bash
 
@@ -461,7 +465,7 @@ Putting It All Together
    #. **Add The Recurrences.**
 
       The weather-forecasting workflow will require two
-      recurrences. Add sections under the ``graph`` section for these,
+      recurrences. Add these under the ``graph`` section
       based on the information given above.
 
       .. hint::
@@ -488,12 +492,12 @@ Putting It All Together
             +        PT3H =
             +        +PT6H/PT6H =
 
-   #. **Write The Graphing.**
+   #. **Write The Graph.**
 
-      With the help of the graphs and the information above add dependencies to
-      your workflow to implement the weather-forecasting workflow.
+      With the help of the the information above add the tasks and dependencies to
+      to implement the weather-forecasting workflow.
 
-      You will need to consider the intercycle dependencies between tasks.
+      You will need to consider the intercycle dependencies between tasks as well.
 
       Use ``cylc graph`` to inspect your work.
 
@@ -501,9 +505,8 @@ Putting It All Together
 
          The dependencies you will need to formulate are as follows:
 
-         * The ``consolidate_observations`` task is dependent on the
-           ``get_observations_<site>`` tasks.
-         * The ``forecast`` task is dependent on:
+         * The ``consolidate_observations`` task depends on ``get_observations_<site>``.
+         * The ``forecast`` task depends on:
 
            * the ``get_rainfall`` task;
            * the ``consolidate_observations`` tasks from:
@@ -512,10 +515,10 @@ Putting It All Together
              * the cycle 3 hours before (``-PT3H``);
              * the cycle 6 hours before (``-PT6H``).
 
-         * The ``post_process_exeter`` task is dependent on the ``forecast``
+         * The ``post_process_exeter`` task depends on the ``forecast``
            task.
 
-         To launch ``cylc graph`` run the command:
+         To visualise your workflow run the command:
 
          .. code-block:: sub
 
@@ -546,9 +549,8 @@ Putting It All Together
 
    #. **Intercycle Offsets.**
 
-      To ensure the ``forecast`` tasks for different cycles run in order the
-      ``forecast`` task will also need to be dependent on the previous run
-      of ``forecast``.
+      To ensure the ``forecast`` tasks run in the right order (one cycle
+      after another) they each need to depend on their own previous run:
 
       .. digraph:: example
          :align: center

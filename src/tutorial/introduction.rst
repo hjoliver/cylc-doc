@@ -18,12 +18,12 @@ What Is A Workflow?
 
 .. ifnotslides::
 
-   In research, business and other fields we may have processes that we repeat
-   in the course of our work. At its simplest a workflow is a set of steps that
+   In research, business and other fields we may need to repeat processes in
+   the course of our work. At its simplest a workflow is a set of steps that
    must be followed in a particular order to achieve some end goal.
 
-   We can represent each "step" in a workflow as a oval and the order with
-   arrows.
+   We can represent each "step" in a workflow as a node in a graph, and the
+   order with arrows between them.
 
 .. nextslide::
 
@@ -67,11 +67,11 @@ Cylc can automatically:
 .. ifnotslides::
 
    Cylc was originally developed at NIWA (The National Institute of Water and
-   Atmospheric Research - New Zealand) for running their weather forecasting
+   Atmospheric Research, New Zealand) for running their weather forecasting
    workflows. Cylc is now developed by an international partnership including
-   members from NIWA and the Met Office (UK). Though initially developed for
-   meteorological purposes Cylc is a general purpose tool as applicable in
-   business as in scientific research.
+   NIWA and the Met Office (UK). Though initially developed for meteorological
+   purposes Cylc is a general purpose tool as applicable in business as it is
+   in scientific research.
 
 .. nextslide::
 
@@ -86,7 +86,7 @@ Cylc can automatically:
 .. nextslide::
 
 Cylc provides a variety of command line and GUI tools for visualising and
-interacting with workflows. Shown below are Cylc TUI (Text User Interface),
+interacting with workflows. Shown below are Cylc TUI (Terminal User Interface),
 GUI and ``cylc scan``.
 
 .. image:: /tutorial/img/cylc-tools.png
