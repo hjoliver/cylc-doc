@@ -1,7 +1,8 @@
-.. _tutorial-cylc-graphing:
+.. _Cylc file format:
 
-The Dependency Graph
-====================
+The :cylc:conf:`flow.cylc` File Format
+======================================
+
 
 .. admonition:: Aims
    :class: aims
@@ -10,10 +11,6 @@ The Dependency Graph
    | ✅ Recognise the ``flow.cylc`` file format.
    | ✅ Write simple chains of dependencies.
 
-.. _Cylc file format:
-
-The :cylc:conf:`flow.cylc` File Format
---------------------------------------
 
 .. ifnotslides::
 
@@ -177,18 +174,24 @@ are equivalent:
                   b = C
 
 
+.. _tutorial-cylc-graphing:
+
+
+The Dependency Graph
+====================
+
 Graph Strings
 -------------
 
-In Cylc we consider workflows in terms of :term:`tasks <task>` and
+Cylc workflows are defined in terms of :term:`tasks <task>` and
 :term:`dependencies <dependency>`.
 
 .. ifnotslides::
 
-   Task are represented by their names and dependencies by arrows between them
-   (``=>``), so the following text defines two tasks where ``make_dough`` is
-   dependent on ``buy_ingredients``:
-
+   Task have names, and dependencies are represented by arrows
+   (``=>``) between them. For example, here's a task ``make_dough`` that should
+   run after another task ``buy_ingredients`` has succeeded:
+ 
 .. minicylc::
    :align: center
    :snippet:
@@ -200,9 +203,8 @@ In Cylc we consider workflows in terms of :term:`tasks <task>` and
 
 .. ifnotslides::
 
-   In a Cylc workflow this would mean that ``make_dough`` would only run when
-   ``buy_ingredients`` has succeeded. These :term:`dependencies
-   <dependency>` can be chained together:
+ 
+   These :term:`dependencies <dependency>` can also be chained together:
 
 .. minicylc::
    :align: center
@@ -215,8 +217,8 @@ In Cylc we consider workflows in terms of :term:`tasks <task>` and
 
 .. ifnotslides::
 
-   This line of text is referred to as a :term:`graph string`. These graph
-   strings can be combined to form more complex workflows:
+   And they can be combined to form more complex
+   :term:`graph strings<graph string>`:
 
 .. minicylc::
    :align: center
@@ -231,8 +233,8 @@ In Cylc we consider workflows in terms of :term:`tasks <task>` and
 
 .. ifnotslides::
 
-   Graph strings can also contain "and" (``&``) and "or" (``|``) operators, for
-   instance the following lines are equivalent to the ones just above:
+   Graph strings can also contain "and" (``&``) and "or" (``|``) operators.
+   For instance, the following lines are equivalent to those just above:
 
 .. code-block:: cylc-graph
 
@@ -241,8 +243,8 @@ In Cylc we consider workflows in terms of :term:`tasks <task>` and
 
 .. nextslide::
 
-Collectively these :term:`graph strings<graph string>` are referred to as a
-:term:`graph`.
+Collectively, these :term:`graph strings<graph string>` make up the workflow
+dependency :term:`graph`.
 
 .. admonition:: Note
    :class: tip
@@ -252,15 +254,20 @@ Collectively these :term:`graph strings<graph string>` are referred to as a
       The order of lines in the graph doesn't matter, so
       the following examples are equivalent:
 
-   .. code-block:: cylc-graph
+      .. list-table::
+         :class: grid-table
 
-      foo => bar
-      bar => baz
+         * -
+            .. code-block:: cylc-graph
 
-   .. code-block:: cylc-graph
+               foo => bar
+               bar => baz
 
-      bar => baz
-      foo => bar
+           -
+            .. code-block:: cylc-graph
+
+               bar => baz
+               foo => bar
 
 
 Cylc Graphs
@@ -268,8 +275,8 @@ Cylc Graphs
 
 .. ifnotslides::
 
-   The :term:`graph` for a *non-cycling* :term:`Cylc workflow` is defined by
-   ``[scheduling][graph]R1``, where ``R1`` means *run once*:
+   The :term:`graph` for a *non-cycling* :term:`Cylc workflow` is defined in
+   the ``[scheduling][graph]R1`` setting, where ``R1`` means *run once*:
 
 .. code-block:: cylc
 
@@ -285,18 +292,16 @@ Cylc Graphs
 .. ifnotslides::
 
    This is a minimal :term:`Cylc workflow` that defines a :term:`graph` of
-   tasks for Cylc to run, but does not yet say what scripts or binaries to run
+   tasks to run, but does not yet say what scripts or applications to run
    for each task. We will cover that later in the :ref:`runtime tutorial
    <tutorial-runtime>`.
 
    Cylc provides a command line utility
    for visualising :term:`graphs <graph>`, ``cylc graph <path>``, where
-   ``path`` is the location of the :cylc:conf:`flow.cylc` file that you wish to
-   visualise.
-
-   ``cylc graph`` will generate a diagram similar to the ones you have
-   seen so far. The number ``1`` below each task is the :term:`cycle point`. We
-   will explain what this means in the next section.
+   ``path`` is the location of the :cylc:conf:`flow.cylc` file.
+   It generates diagrams similar to the ones you have seen so far. The number
+   ``1`` below each task is the :term:`cycle point`. We will explain what this
+   means in the next section.
 
 .. image:: ../img/cylc-graph.png
    :align: center
@@ -319,8 +324,8 @@ Cylc Graphs
 
    .. ifnotslides::
 
-      The graph drawn by ``cylc graph`` may vary slightly from one run to
-      another but the tasks and dependencies will always be the same.
+      Graphs drawn by ``cylc graph`` may vary slightly from one run to
+      another, but the tasks and dependencies will always be the same.
 
 .. nextslide::
 
@@ -334,7 +339,7 @@ Cylc Graphs
 .. practical::
 
    .. rubric:: In this practical we will create a new Cylc workflow and write a
-      graph for it to use.
+      graph of tasks for it to run.
 
    #. **Create a Cylc workflow.**
 
@@ -355,7 +360,7 @@ Cylc Graphs
          mkdir ~/cylc-src/graph-introduction
          cd ~/cylc-src/graph-introduction
 
-      Inside your workflow source directory create a :cylc:conf:`flow.cylc`
+      In your new source directory create a :cylc:conf:`flow.cylc`
       file and paste the following text into it:
 
       .. code-block:: cylc
@@ -381,7 +386,7 @@ Cylc Graphs
          a -> b -> d -> e
          c -> b -> f
 
-   #. **Use** ``cylc graph`` **to visualise the workflow.**
+   #. **Visualise the workflow.**
 
       Once you have written some graph strings try using ``cylc graph`` to
       display the workflow. Run the following command:
@@ -393,29 +398,37 @@ Cylc Graphs
       .. admonition:: Note
          :class: hint
 
-         ``cylc graph`` takes the path to the workflow as an argument. As we are
-         inside the :term:`run directory` we can run ``cylc graph .``.
+         ``cylc graph`` takes the path to the workflow as an argument. Inside
+         the :term:`source directory` we can just run ``cylc graph .``.
 
       If the results don't match the diagram above try going back to the
       :cylc:conf:`flow.cylc` file and making changes.
 
+
       .. spoiler:: Solution warning
 
          There are multiple correct ways to write this graph. So long as what
-         you see in ``cylc graph`` matches the above diagram then you have a
+         you see from ``cylc graph`` matches the above diagram then you have a
          correct solution.
+
 
          Two valid examples:
 
-         .. code-block:: cylc-graph
+            .. list-table::
+               :class: grid-table
 
-            a & c => b => d & f
-            d => e
+               * -
+                  .. code-block:: cylc-graph
 
-         .. code-block:: cylc-graph
+                     a & c => b => d & f
+                     d => e
 
-            a => b => d => e
-            c => b => f
+                 -
+                  .. code-block:: cylc-graph
+
+                     a => b => d => e
+                     c => b => f
+
 
          The whole workflow should look something like this:
 

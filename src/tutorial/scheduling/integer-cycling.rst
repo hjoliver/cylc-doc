@@ -15,12 +15,12 @@ Repeating Workflows
 
 .. ifnotslides::
 
-   We may want to repeat the same workflow multiple times. In Cylc this
-   is called :term:`cycling` and each repetition is referred to as a :term:`cycle`.
+   You may want to repeat the same workflow multiple times. In Cylc this
+   is called :term:`cycling`, and each repetition is called a :term:`cycle`.
 
    Each :term:`cycle` is given a unique label, called a
    :term:`cycle point`. For now these :term:`cycle points<cycle point>` will be
-   integers *(they can also be dates and times as we will see in the next section)*.
+   integers *(they can also be datetimes as we will see in the next section)*.
 
 To make a workflow repeat we must tell Cylc three things:
 
@@ -33,21 +33,19 @@ To make a workflow repeat we must tell Cylc three things:
 .. ifnotslides::
 
    The :term:`recurrence`
-      How often we want the workflow (or a part of it) to repeat.
+      How often to repeat the workflow (or part of it).
    The :term:`initial cycle point`
-      At what cycle point we want to start the workflow.
-   The :term:`final cycle point`
-      *Optionally* we can also tell Cylc what cycle point we want to stop the
-      workflow.
+      At what cycle point to start the workflow.
+   The :term:`final cycle point` (optional)
+      We can also tell Cylc where to stop the workflow.
 
 .. nextslide::
 
 .. ifnotslides::
 
    Let's take the bakery example from the previous section. Bread is
-   produced in batches so the bakery will repeat this workflow for each
-   batch of bread they bake. We can make this workflow repeat with the addition
-   of three lines:
+   baked in batches so the bakery will repeat this workflow for each
+   batch. We can make the workflow repeat by adding three lines:
 
 .. code-block:: diff
 
@@ -69,8 +67,8 @@ To make a workflow repeat we must tell Cylc three things:
      <cycle point>` integer labels.
    * ``initial cycle point = 1`` tells Cylc to start counting cycle points
      from 1.
-   * ``P1`` is the :term:`recurrence`. The ``P1`` :term:`graph string`
-     will be repeated at each :term:`cycle point`.
+   * ``P1`` is the :term:`recurrence`. A ``P1`` :term:`graph string`
+     repeats at every integer :term:`cycle point`.
 
    The first three :term:`cycles<cycle>` look like this, with the entire
    workflow repeated at each cycle point:
@@ -122,7 +120,7 @@ To make a workflow repeat we must tell Cylc three things:
 
 .. ifnotslides::
 
-   Note the number under a task shows which :term:`cycle point` it belongs to.
+   The number under each task shows which :term:`cycle point` it belongs to.
 
 
 Intercycle Dependencies
@@ -133,9 +131,10 @@ Intercycle Dependencies
    We've just seen how to write a workflow that repeats every :term:`cycle`.
 
    Cylc runs tasks as soon as their dependencies are met, regardless of cycle
-   point, so cycles will not necessarily run in order. This could cause
-   problems; for instance we could find ourselves pre-heating the oven in one
-   cycle while still cleaning it in another.
+   point, so cycles will not necessarily run in order. This can be very
+   efficient, but it could also cause problems. For instance we could find
+   ourselves pre-heating the oven in one cycle while still cleaning it in
+   a previous cycle.
 
    To resolve this we can add :term:`dependencies<dependency>` *between*
    cycles, to the graph. To ensure that ``clean_oven`` completes before
@@ -146,8 +145,8 @@ Intercycle Dependencies
       clean_oven[-P1] => pre_heat_oven
 
    In a ``P1`` recurrence, the suffix ``[-P1]`` means *the previous cycle point*,
-   Similarly, ``[-P2]`` would refer to a task two cycles ago.
-   The new dependency can be added to the workflow graph like this:
+   Similarly, ``[-P2]`` refers back two cycles. The new dependency can be added
+   to the workflow graph like this:
 
 .. code-block:: diff
 
@@ -218,16 +217,14 @@ Intercycle Dependencies
 
 .. ifnotslides::
 
-   Adding this dependency "strings together" the cycles, forcing them to run in
-   order. We refer to dependencies between cycles as
-   :term:`intercycle dependencies<intercycle dependency>`.
-
+   Adding this :term:`intercycle dependency` forces the connected tasks, in
+   different cycle points, to run in order. 
 
    Note that the ``buy_ingredients`` task has no arrows pointing at it.
-   This means it has no *upstream* dependencies, or *parent tasks*, in the
-   graph. Consequently all ``buy_ingredients`` tasks want to run straight away.
-   This could cause our bakery to run into cash-flow problems as they would be
-   purchasing ingredients well in advance of using them.
+   This means it has no *parent tasks* to wait on, upstream in the graph.
+   Consequently all ``buy_ingredients`` tasks will want to run straight away.
+   This could cause our bakery to run into cash-flow problems by purchasing
+   ingredients too far in advance of using them.
 
    To solve this problem without running out of ingredients, the bakery wants
    to purchase ingredients two batches ahead. This can be achieved by adding
@@ -257,17 +254,15 @@ Intercycle Dependencies
 
 .. ifnotslides::
 
-   This dependency means that the ``buy_ingredients`` task will run after
-   the ``sell_bread`` task two cycles before.
+   This means that ``buy_ingredients`` will run after the ``sell_bread`` task
+   two cycles earlier.
 
 .. note::
 
-   The ``[-P2]`` suffix is used to reference a task two cycles before. For the
-   first two cycles this doesn't make sense as there was no cycle two cycles
-   before, so those dependencies will be ignored.
-
+   The ``[-P2]`` suffix references a task two cycles back. For the first two
+   cycles this doesn't make sense, so those dependencies will be ignored.
    Any intercycle dependencies stretching back to before the
-   :term:`initial cycle point` will be ignored.
+   :term:`initial cycle point` are ignored.
 
 .. digraph:: example
    :align: center
@@ -339,10 +334,9 @@ Recurrence Sections
 .. ifnotslides::
 
       In the previous examples we used a
-      ``P1``:term:`recurrence` to make the workflow repeat at every integer
-      cycle point. Similarly ``P2`` means repeat every
-      *other* cycle, and so on. To build more complex workflows we can use
-      multiple recurrences:
+      ``P1``:term:`recurrence` to make the workflow repeat at successive integer
+      cycle points. Similarly ``P2`` means repeat every *other* cycle, and so
+      on. To build more complex workflows we can use multiple recurrences:
 
       .. code-block:: cylc
 
@@ -389,14 +383,14 @@ Recurrence Sections
 
    From an arbitrary cycle point:
       We can specify a start point for the recurrence by separating it from
-      the repetition with a forward slash (``/``). For example, ``5/P3`` means
+      the period with a forward slash (``/``). For example, ``5/P3`` means
       repeat every third cycle *starting from* cycle number 5. And to run a
       graph every even cycle point you would use ``2/P2``.
 
    Offset from the initial cycle point:
       The start point of a recurrence can also be defined as an offset from the
       :term:`initial cycle point` For example, ``+P5/P3`` means repeat every
-      third cycle starting from 5 cycles *after* the initial cycle point.
+      third cycle from 5 cycles *after* the initial cycle point.
 
 .. ifslides::
 

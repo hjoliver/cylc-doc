@@ -36,8 +36,7 @@ with numbered :term:`cycle points <cycle point>`.
 ISO8601
 -------
 
-Cylc uses the :term:`ISO8601` international datetime standard format to
-represent datetimes and durations.
+Cylc uses the :term:`ISO8601` datetime standard to represent datetimes and durations.
 
 .. _tutorial-iso8601-datetimes:
 

@@ -43,10 +43,11 @@ What Is Cylc?
 .. ifnotslides::
 
    Cylc (pronounced silk) is a workflow engine, a system that automatically
-   executes tasks according to their schedules and dependencies.
+   executes tasks according to schedules and dependencies.
 
-   In a Cylc workflow each step is a computational task, a script to execute.
-   Cylc runs each task as soon as it is appropriate to do so.
+   In a Cylc workflow each step is a computational task that runs a script or
+   application of some kind. Cylc runs each task as soon as it is appropriate
+   to do so.
 
 .. minicylc::
    :align: center
@@ -68,10 +69,10 @@ Cylc can automatically:
 
    Cylc was originally developed at NIWA (The National Institute of Water and
    Atmospheric Research, New Zealand) for running their weather forecasting
-   workflows. Cylc is now developed by an international partnership including
-   NIWA and the Met Office (UK). Though initially developed for meteorological
-   purposes Cylc is a general purpose tool as applicable in business as it is
-   in scientific research.
+   workflows. It is now developed by an international partnership including
+   NIWA, the Met Office (UK), and members of the Unified Model Consortium.
+   Though initially developed for meteorological purposes Cylc is a general
+   purpose tool as applicable in business as it is in scientific research.
 
 .. nextslide::
 
