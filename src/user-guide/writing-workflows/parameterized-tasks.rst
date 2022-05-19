@@ -59,7 +59,7 @@ For example:
        # default task suffixes: _0, _1, _e, _pi, _i
        item = 0, 1, e, pi, i
 
-       # ERROR: mix strings with int range
+       # ERROR: can't mix strings with integer range
        p = one, two, 3..5
 
 Then angle brackets denote use of these parameters throughout the workflow
@@ -508,9 +508,6 @@ And here's how to do the same thing with parameterized tasks instead of cycling:
                run-model $(cylc cyclepoint --offset=$OFFSET $INITIAL_POINT)
            """
 
-The two workflows achieve the same result, and both can include special
-behaviour at the start, end, or anywhere in between.
-
 .. todo
    Create sub-figures if possible: for now hacked as separate figures with
    link and caption on final displayed figure.
@@ -523,26 +520,37 @@ behaviour at the start, end, or anywhere in between.
 .. figure:: ../../img/eg2-dynamic.png
    :align: center
 
-   Parameterized (top) and cycling (bottom) versions of the same
-   workflow. The first three cycle points are shown in the
-   cycling case. The parameterized case does not have cycle points (technically
-   all of its tasks have the cycle point 1).
+   Parameterized (top) and cycling (bottom) versions of the same workflow. The
+   first three cycle points are shown in the cycling case. In the parameterized
+   case every task has cycle point 1.
 
-The parameterized version has several disadvantages, however:
+Parameterized cycling has some disadvantages, however:
 
-  - The workflow must be finite in extent and not too large because every
-    parameterized task generates a new task definition
+  - The number of cycles must be finite, because task parameters are expanded
+    completely at start-up.
 
-    - (In a cycling workflow a single task definition acts as a template for
-      all cycle point instances of a task)
-  - Datetime arithmetic has to be done manually
+    - A cycling workflow generates new cycle points on the fly, and can
+      continue indefinitely.
 
-    - (This doesn't apply if it's not a datetime sequence; parameterized
-      integer cycling is straightforward.)
+  - Its not as efficient as cycling, because a parameterized task generates
+    a separate task definition for every parameter value. In other words, for
+    ``foo<m>`` with ``m=0,1``, Cylc sees ``foo_m1`` and ``foo_m2`` as entirely
+    separate tasks (although they can still inherit the same settings).
+
+    - In a cycling workflow, a single task definition is a template for each
+      cycle point instance of the task. In other words, ``1/foo`` and ``2/foo``
+      are two instantiations of the same task definition.
+
+  - Any datetime arithmetic has to be done manually.
+
+    - In a datetime cycling workflow, Cylc works out the sequence of datetime 
+      cycles for you, based on the graph recurrence expressions.
 
 
 Parameterized Sub-Cycles
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+There is one good use case for parameterized cycles: ...
 
 A workflow can have multiple main cycling sequences, but sub-cycles within each
 main cycle point have to be parameterized. A typical use case for this is
