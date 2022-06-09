@@ -11,3 +11,4 @@ Reference
    api/index
    environments/conda.rst
    dev-history-major-changes
+   spawn-on-demand
