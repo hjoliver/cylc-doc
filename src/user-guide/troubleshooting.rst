@@ -294,14 +294,14 @@ To find out why a task is not being run, use the ``cylc show`` command.
 This will list the task's prerequisites and xtriggers.
 
 Note, at present ``cylc show`` can only display tasks in the
-:term:`active window` (however, waiting tasks beyond that, by
+:term:`n-window` (however, waiting tasks beyond ``n=0``, by
 definition, have no satisfied prerequisites).
 
-Note, tasks which are held |task-held| will not be run, use ``cylc release``
-to release a held task.
+Note, tasks which are held |task-held| will not be run. Use
+``cylc release`` to release a held task.
 
-Note, Cylc will not submit jobs if the scheduler is paused, use ``cylc play``
-to resume a paused workflow.
+Note, Cylc will not submit jobs if the scheduler is paused. Use
+``cylc play`` to resume a paused workflow.
 
 
 Required files are not being installed on remote platforms

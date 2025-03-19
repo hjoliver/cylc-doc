@@ -558,8 +558,8 @@ Remove Tasks
 
          The removed task will be greyed out but it might not
          disappear from view because the GUI displays all tasks
-         in a graph-based :term:`n-window` surrounding the
-         current :term:`active window`.
+         in a graph-based :term:`n-window` surrounding current
+         :term:`active tasks <active task>`.
 
 
    .. tab-item:: CLI

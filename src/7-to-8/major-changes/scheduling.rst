@@ -26,14 +26,14 @@ Cylc 8 has a new scheduling algorithm that:
 - Is much more efficient because it doesn't need to track as 
   many waiting and succeeded tasks.
 
-  - Tasks are not pre-spawned before they are needed.
-  - Tasks are not retained when they succeed.
-  - No costly indiscriminate dependency matching is done.
+  - Tasks are not "pre-spawned" before they are needed.
+  - Tasks are not retained in memory once they complete.
+  - There is no costly indiscriminate dependency matching.
 - Distinguishes between :term:`optional <optional output>` and
   :term:`required <required output>` task outputs, to support:
 
   - :term:`graph branching` without :term:`suicide triggers <suicide trigger>`
-  - correct diagnosis of :term:`workflow completion`
+  - correct diagnosis of :ref:`workflow completion`
 - Causes no implicit dependence on previous-instance job submit
 
   - instances of same task can run out of cycle point order

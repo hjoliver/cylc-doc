@@ -194,16 +194,17 @@ There has been a major update to Tui at Cylc 8.3.0:
 N-Window selector in the GUI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :term:`n-window` determines how much of a workflow is visible in the GUI / Tui.
-
-The ``n=0`` window displays only the scheduler's :term:`active window`.
-
-The ``n=1`` window also contains tasks one graph "edge", i.e. immediately
-upstream or downstream from, those in the :term:`active window`. And so on, for
-``n=2`` and ``n=3``.
+The :term:`n-window` extent is a graph-based window that determines how much
+of a workflow is visible in the GUI.
 
 You can change the n-window extent in the GUI with a toolbar button, to display
-fewer or more tasks around the current ``n=0`` :term:`active window`.
+fewer or more tasks around current :term:`active tasks <active task>`.
+This affects all GUI views equally, not just the graph view.
+
+The ``n=0`` window displays only current active tasks.
+
+The ``n=1`` window displays tasks out to one graph edge around the active
+tasks; ``n=2`` out to two graph edges; and so on.
 
 .. image:: changes/gui-n-window-selector.gif
    :width: 100%
@@ -254,7 +255,7 @@ When a task achieves a final status, its outputs are validated against a "comple
 expression" to ensure that it has produced all of its
 :term:`required outputs <required output>`.
 If a task fails this validation check it is said to have "incomplete outputs"
-and will be retained in the :term:`active window` pending user intervention.
+and will be retained in the :term:`n=0 window <n-window>` pending user intervention.
 
 This completion expression is generated automatically from the graph.
 By default, tasks are expected to succeed, if you register any additional

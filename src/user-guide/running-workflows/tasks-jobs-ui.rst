@@ -107,27 +107,21 @@ extent for :term:`cycling workflows <cycling workflow>` with no
 :term:`final cycle point`.
 
 Consequently the GUI often can't display "all of the tasks" at once. Instead
-it displays all tasks in the :term:`active window` of the workflow, as well
-as any tasks out to a configurable number of graph edges away from them in
-the task dependency :term:`graph`.
+it displays all tasks a configurable :term:`n-window` around the current
+:term:`active tasks <active task>`.
 
 .. image:: ../../img/n-window.png
    :align: center
 
 
 n=0:
-   The ``n=0`` window corresponds to the scheduler's :term:`active window`:
-   tasks that are near ready to run, in the process of running, or
-   which require user intervention. See the :term:`glossary <active window>`
-   for a more detailed description.
+   The ``n=0`` window contains current :term:`active tasks`: those that are
+   near ready to run, running, or which require user intervention.
 n=1:
-   The ``n=1`` window contains the ``n=0`` window plus all tasks out to one
-   graph edge around them, i.e. their parents (the tasks that come immediately
-   before them in the graph) and their descendants (immediately after them in the
-   graph).
+   The ``n=1`` window contains the ``n=0`` tasks plus those out
+   to *one* graph edge around them in the graph.
 n=2:
-   The ``n=2`` window extends out to *two* graph edges around
-   the :term:`active window`, and so on.
+   The ``n=2`` window extends out to *two* graph edges from ``n=0``.
 
 This animation shows how the n-window advances as a workflow runs, tasks are
 colour coded according to their n-window value with the colours changing from

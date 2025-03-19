@@ -26,8 +26,8 @@ state, with a new clock trigger to handle the configured retry delay.
 Aborting a Retry Sequence
 -------------------------
 
-To prevent a task from retrying, remove it from the scheduler's
-:term:`active window`. For a task ``3/foo`` in workflow ``brew``:
+To prevent a task from retrying, remove it from the :term:`n=0 window <n-window>`.
+For a task ``3/foo`` in workflow ``brew``:
 
 .. code-block:: console
 
